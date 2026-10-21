@@ -1,22 +1,27 @@
 # CodeSnap Next
 
+English | [简体中文](README.zh-CN.md)
+
 A standalone VS Code extension derived from [CodeSnap](https://github.com/kufii/CodeSnap).
 It uses SnapDOM, revisioned PNG caching, and acknowledged native clipboard backends for Windows and Wayland.
 
-独立维护的代码截图扩展，重点改善生成速度、复制可靠性和长代码导出。
+Independently maintained, with a focus on faster image generation, reliable copying, and long code screenshots.
 
-- [与原版的变化](docs/CHANGES.md)
-- [Benchmark：实测数据、范围与复现方式](docs/BENCHMARK.md)
+- [Changes from upstream (Chinese)](docs/CHANGES.md)
+- [Benchmark results, scope, and reproduction steps (Chinese)](docs/BENCHMARK.md)
 
-Linux headless Chromium 实测，以下为复制完成总耗时的 **Median**（2×，每组 20 次）：
+Measured in headless Chromium on Linux. **Median total time until the clipboard write completes**
+(2× output, 20 samples per scenario):
 
-| 选区                   | 原版 1.3.4 | Next 重新生成后复制 | Next 复用已准备 PNG |
-| ---------------------- | ---------- | ------------------- | ------------------- |
-| 200 行 / 552 × 5104px  | 1378.4ms   | 185.6ms             | 18.7ms              |
-| 450 行 / 552 × 11104px | 2311.2ms   | 394.0ms             | 37.0ms              |
+| Selection                 | Original 1.3.4 | Next: render and copy | Next: reuse prepared PNG |
+| ------------------------- | -------------- | --------------------- | ------------------------ |
+| 200 lines / 552 × 5104px  | 1378.4ms       | 185.6ms               | 18.7ms                   |
+| 450 lines / 552 × 11104px | 2311.2ms       | 394.0ms               | 37.0ms                   |
 
-缓存数据不含此前生成 PNG 的时间。200 行未缓存 P95 为 224.1ms，尚未达到 200ms 的优化目标。
-这些不是 Windows / Wayland 原生后端或 VS Code Webview 的端到端数据；环境、P95 和原始样本见 benchmark 报告。
+Cached timings exclude the earlier PNG preparation. Uncached P95 at 200 lines was 224.1ms,
+which does not yet meet the 200ms optimization target. These are not end-to-end measurements
+of Windows / Wayland native backends or the VS Code Webview. See the benchmark report for
+the environment, P95, and raw samples.
 
 Extension ID: `lihaoze123.codesnap-next`. Command: **CodeSnap Next 📸** (`codesnapNext.start`).
 Settings use `codesnapNext.*`; existing `codesnap.*` settings are not imported. Both extensions can
@@ -25,16 +30,17 @@ For a local VSIX, run `npm ci`, then `npx @vscode/vsce package`, and use **Exten
 
 ## Features
 
-- Quickly save screenshots of your code
-- Copy screenshots to your clipboard
-- Show line numbers
-- Many other configuration options
+- SnapDOM rendering with reusable PNG caching
+- Browser clipboard copying, with native Windows and Wayland backends
+- Explicit selection capture, progress feedback, and retries
+- Full-size long screenshots with a choice of 1× or 2× resolution
+- Configurable line numbers, colours, shadows, padding, and window controls
 
 ## Usage Instructions
 
 1. Open the command palette (Ctrl+Shift+P on Windows and Linux, Cmd+Shift+P on OS X) and search for `CodeSnap Next`.
-2. Select code before opening CodeSnap, or select code and click **Update selection** in the preview.
-3. Adjust the width of the screenshot if desired. CodeSnap prepares the image in the background.
+2. Select code before opening CodeSnap Next, or select code and click **Update selection** in the preview.
+3. Adjust the width of the screenshot if desired. Eligible images are prepared in the background.
 4. Click **Copy image** or **Save image**. The shutter button follows `codesnapNext.shutterAction`.
 
 Changing the editor selection does not automatically update the preview. Click **Update selection**
@@ -44,11 +50,13 @@ capture its new syntax colours. Reopening an existing preview preserves its capt
 
 **Tips**:
 
-- You can also start CodeSnap by selecting code, right clicking, and clicking CodeSnap
-- If you'd like to bind CodeSnap to a hotkey, open up your keyboard shortcut settings and bind `codesnapNext.start` to a custom keybinding.
-- If you'd like to copy to clipboard instead of saving, click the image and press the copy keyboard shortcut (defaults are Ctrl+C on Windows and Linux, Cmd+C on OS X), or bind `codesnapNext.shutterAction` to `copy` in your settings
+- You can also start CodeSnap Next by selecting code, right clicking, and clicking **CodeSnap Next 📸**
+- If you'd like to bind CodeSnap Next to a hotkey, open up your keyboard shortcut settings and bind `codesnapNext.start` to a custom keybinding.
+- If you'd like to copy to clipboard instead of saving, click the image and press the copy keyboard shortcut (defaults are Ctrl+C on Windows and Linux, Cmd+C on OS X), or set `codesnapNext.shutterAction` to `copy` in your settings
 
 ## Examples
+
+These examples are inherited from the original CodeSnap project.
 
 [Material Theme](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme) + [Operator Mono](https://www.typography.com/fonts/operator/styles/operatormono)
 
@@ -64,7 +72,7 @@ Monokai + [Fira Code](https://github.com/tonsky/FiraCode)
 
 ## Configuration
 
-CodeSnap is highly configurable. Here's a list of settings you can change to tune the way your screenshots look:
+CodeSnap Next is highly configurable. Here's a list of settings you can change to tune the way your screenshots look:
 
 **`codesnapNext.backgroundColor`:** The background color of the snippet's container. Can be any valid CSS color.
 
@@ -100,7 +108,7 @@ The flash occurs only after the clipboard write succeeds. Failed exports show a 
 
 On Linux Wayland, a denied browser write falls back to the local `wl-copy` command when available.
 The extension waits for its result before reporting success and reuses that working backend for
-subsequent copies. CodeSnap runs in the local UI extension host, including for remote workspaces;
+subsequent copies. CodeSnap Next runs in the local UI extension host, including for remote workspaces;
 it refuses to run the native fallback on a remote host. If `wl-copy` is unavailable, the failure is
 reported explicitly; nothing is installed automatically. macOS retains the browser path.
 
@@ -161,6 +169,12 @@ other operating systems. Windows end-to-end paste compatibility and actual timin
 testing on Windows; Linux browser tests and mocked process tests cannot establish them.
 
 ## Acknowledgements
+
+[CodeSnap](https://github.com/kufii/CodeSnap) by Adrien Pyke and its contributors, for the original extension.
+
+[CodeSnap Fast](https://github.com/SunFlowerBaby32/codesnap-fast), for the Windows clipboard helper.
+
+See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md) for attribution and licensing.
 
 The great [Polacode](https://github.com/octref/polacode), for the initial concept.
 
