@@ -2,3 +2,5 @@ node_modules
 *.vsix
 *.dSYM
 .gitpod.yml
+test-results/
+playwright-report/

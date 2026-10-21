@@ -12,9 +12,14 @@
 ## Usage Instructions
 
 1. Open the command palette (Ctrl+Shift+P on Windows and Linux, Cmd+Shift+P on OS X) and search for `CodeSnap`.
-2. Select the code you'd like to screenshot.
-3. Adjust the width of the screenshot if desired.
-4. Click the shutter button to save the screenshot to your disk.
+2. Select code before opening CodeSnap, or select code and click **Update selection** in the preview.
+3. Adjust the width of the screenshot if desired. CodeSnap prepares the image in the background.
+4. Click **Copy image** or **Save image**. The shutter button follows `codesnap.shutterAction`.
+
+Changing the editor selection does not automatically update the preview. Click **Update selection**
+to capture it. Capturing highlighted code uses and replaces the system clipboard; resizing, changing
+settings, and preparing images do not. After changing the editor theme, update the selection to
+capture its new syntax colours. Reopening an existing preview preserves its captured code.
 
 **Tips**:
 
@@ -61,6 +66,78 @@ CodeSnap is highly configurable. Here's a list of settings you can change to tun
 **`codesnap.target`:** Either `container` to take the screenshot with the container, or `window` to only take the window.
 
 **`codesnap.shutterAction`:** Either `save` to save the screenshot into a file, or `copy` to copy the screenshot into the clipboard.
+
+## Image preparation and copying
+
+Images use [SnapDOM](https://github.com/zumerlab/snapdom), at a default 2× resolution independent of
+display scaling. Use **Resolution** to explicitly select 1× for larger selections. Output dimensions
+and pixel count are displayed below the toolbar; changing resolution preserves the full selection.
+A prepared PNG Blob is reused until the code, appearance, dimensions, or resolution change.
+Copying fixes the preview state at the moment of the action, even if settings change while it runs.
+The flash occurs only after the clipboard write succeeds. Failed exports show a retry action;
+**Save image** is always an explicit alternative.
+
+On Linux Wayland, a denied browser write falls back to the local `wl-copy` command when available.
+The extension waits for its result before reporting success and reuses that working backend for
+subsequent copies. CodeSnap runs in the local UI extension host, including for remote workspaces;
+it refuses to run the native fallback on a remote host. If `wl-copy` is unavailable, the failure is
+reported explicitly; nothing is installed automatically. macOS retains the browser path.
+
+On Windows, `codesnap.clipboardMode: "auto"` selects a local Windows PowerShell STA helper
+**before** calling the browser clipboard. The helper publishes the original PNG plus a compatible
+Bitmap format, keeps the data available after the helper exits, retries brief clipboard contention, and
+acknowledges success before the flash. This path is adapted from
+[CodeSnap Fast](https://github.com/SunFlowerBaby32/codesnap-fast); its image-size caps are not adopted.
+The original PNG is placed in a per-request temporary directory and removed when the request ends.
+PowerShell runs hidden with the current execution policy; no administrator privileges or execution
+policy changes are requested. If it is unavailable or blocked, use the explicit browser mode:
+
+```json
+{
+  "codesnap.clipboardMode": "browser",
+  "codesnap.showTiming": true
+}
+```
+
+Preparing and clipboard-writing stages are always visible. `showTiming` additionally shows the
+preparation and clipboard durations after success. The Windows helper has a 15-second process
+timeout and the Webview waits up to 20 seconds for its reply; failures do not report success.
+
+Background preparation covers up to 200 lines and 4 million output pixels. Larger images are
+generated on demand. There are no extension-imposed pixel-count, side-length, or PNG payload-size
+caps. Large PNG exports use SnapDOM's windowed PNG export when supported by the browser. Images
+are never silently resized or cropped; a renderer warning about downscaling is reported as an
+error. Available memory, the browser, the operating system and the receiving application still
+determine what can actually be rendered or pasted. Resolution remains an explicit choice: 2×
+doubles both dimensions and uses four times as many pixels as 1×.
+
+Use **Performance** for cache hit rate and cached/uncached copy P95. Developer Tools contains the
+last 200 timing samples, including DOM capture, PNG encoding, output size and export failures.
+Native Windows samples also include the helper's clipboard-only and total helper timings.
+These measurements stay in memory and contain no code or image data. `writeMs` includes waiting
+for the promised PNG on an uncached copy; it is not a measurement of the compositor alone.
+
+The performance targets are cached copy P95 ≤50ms and uncached copy P95 ≤200ms for selections
+within the background preparation limits. They are targets, not guarantees. End-to-end Wayland,
+other operating systems, fonts and remote-development windows require platform validation.
+
+## Development checks
+
+```sh
+npm ci
+npx playwright install chromium
+npm run check
+npm test
+```
+
+Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to test with an existing Chromium-based browser. The tests
+exercise native-host message handling with a VS Code API mock, real browser PNG clipboard writes
+and reads from another page, permission-denied native fallback, stale snapshots, retries, large exports, transparency and pixel comparison
+against browser paint. The native rich-text clipboard acquisition still needs a VS Code smoke test.
+On Windows, `npm test` also runs the real helper with `-CheckOnly` to verify PNG and Bitmap data
+preparation and the original PNG hash without changing the clipboard. That test is skipped on
+other operating systems. Windows end-to-end paste compatibility and actual timings still require
+testing on Windows; Linux browser tests and mocked process tests cannot establish them.
 
 ## Acknowledgements
 

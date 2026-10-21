@@ -2,7 +2,7 @@
   "name": "codesnap",
   "displayName": "CodeSnap",
   "description": "📷 Take beautiful screenshots of your code",
-  "version": "1.3.4",
+  "version": "1.3.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/kufii/CodeSnap"
@@ -30,6 +30,9 @@
     "onCommand:codesnap.start"
   ],
   "main": "./src/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
   "contributes": {
     "commands": [
       {
@@ -121,6 +124,22 @@
           ],
           "default": "save",
           "description": "The behavior of the shutter button"
+        },
+        "codesnap.clipboardMode": {
+          "scope": "resource",
+          "type": "string",
+          "enum": [
+            "auto",
+            "browser"
+          ],
+          "default": "auto",
+          "description": "Clipboard backend: auto uses native copying on Windows and falls back to wl-copy on Wayland; browser uses only the Webview clipboard."
+        },
+        "codesnap.showTiming": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": false,
+          "description": "Show preparation and clipboard timings after a successful copy."
         }
       }
     }
@@ -129,23 +148,25 @@
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,jsx,md,json,css,prettierrc,eslintrc,html}\"",
     "check:format": "prettier --check \"**/*.{js,jsx,md,json,css,prettierrc,eslintrc,html}\"",
-    "check": "npm run lint && npm run check:format"
+    "check": "npm run lint && npm run check:format",
+    "test": "node --test test/*.test.js && playwright test"
   },
   "devDependencies": {
-    "eslint": "^7.24.0",
-    "eslint-config-adpyke-es6": "^1.4.13",
-    "eslint-config-prettier": "^8.2.0",
-    "prettier": "^2.2.1",
-    "@types/vscode": "^1.52.0",
+    "@playwright/test": "1.64.1",
     "@types/glob": "^7.1.3",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.40",
+    "@types/vscode": "^1.52.0",
+    "eslint": "^7.24.0",
+    "eslint-config-adpyke-es6": "^1.4.13",
+    "eslint-config-prettier": "^8.2.0",
     "glob": "^7.1.6",
     "mocha": "^8.3.2",
+    "prettier": "^2.2.1",
     "typescript": "^4.2.4",
     "vscode-test": "^1.5.2"
   },
   "dependencies": {
-    "dom-to-image-even-more": "^1.0.4"
+    "@zumer/snapdom": "3.3.6"
   }
 }

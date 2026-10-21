@@ -1,7 +1,12 @@
 .vscode/**
 .vscode-test/**
 test/**
+test-results/**
+playwright-report/**
+playwright.config.js
 .gitignore
+.jj/**
+.prettierignore
 vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map

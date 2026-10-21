@@ -15,15 +15,14 @@ const readHtml = async (htmlPath, panel) =>
         )}"`
     );
 
-const getSettings = (group, keys) => {
-  const settings = vscode.workspace.getConfiguration(group, null);
-  const editor = vscode.window.activeTextEditor;
-  const language = editor && editor.document && editor.document.languageId;
-  const languageSettings =
-    language && vscode.workspace.getConfiguration(null, null).get(`[${language}]`);
+const getSettings = (group, keys, editor = vscode.window.activeTextEditor) => {
+  const scope =
+    editor && editor.document
+      ? { uri: editor.document.uri, languageId: editor.document.languageId }
+      : null;
+  const settings = vscode.workspace.getConfiguration(group, scope);
   return keys.reduce((acc, k) => {
-    acc[k] = languageSettings && languageSettings[`${group}.${k}`];
-    if (acc[k] == null) acc[k] = settings.get(k);
+    acc[k] = settings.get(k);
     return acc;
   }, {});
 };

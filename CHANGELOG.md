@@ -4,6 +4,12 @@ All notable changes to the "codesnap" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.3.8]
+
+- Prefer local Windows PowerShell STA image copying in auto mode, with PNG and Bitmap formats.
+- Show preparation and clipboard-writing phases, with optional per-copy timings.
+- Add an explicit browser-only clipboard mode and acknowledge native writes before flashing.
+
 ## [1.3.4]
 
 - Fix issue where extension didn't work with `editor.copyWithSyntaxHighlighting: false`

@@ -1,10 +1,13 @@
 {
   "extends": ["adpyke-es6", "prettier"],
+  "parserOptions": { "ecmaVersion": 2020 },
   "globals": {
-    "ClipboardItem": true
+    "ClipboardItem": true,
+    "snapdom": true
   },
   "env": {
     "browser": false,
     "node": true
-  }
+  },
+  "overrides": [{ "files": ["test/*.spec.js"], "env": { "browser": true } }]
 }

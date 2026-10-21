@@ -118,7 +118,8 @@ body {
   display: inline-block;
 }
 #flash-fx {
-  display: none;
+  pointer-events: none;
+  opacity: 0;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -126,5 +127,56 @@ body {
   right: 0;
   background: white;
   transition: opacity 200ms ease;
-  opacity: 1;
+}
+
+#toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+select {
+  background: var(--vscode-dropdown-background);
+  color: var(--vscode-dropdown-foreground);
+  border: 1px solid var(--vscode-dropdown-border);
+  padding: 4px;
+}
+button {
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder);
+}
+button:disabled,
+button[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+button[hidden] {
+  display: none;
+}
+#save {
+  background: transparent;
+  padding: 0;
+}
+#status,
+#selection-status,
+#image-size {
+  margin-top: 8px;
+  max-width: 70ch;
+}
+#status.error {
+  color: var(--vscode-errorForeground);
+}
+.render-snapshot {
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  pointer-events: none;
+  width: max-content;
 }

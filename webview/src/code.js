@@ -20,9 +20,7 @@ const setupLines = (node, config) => {
       newRow.appendChild(lineNum);
     }
 
-    const span = document.createElement('span');
-    span.textContent = ' ';
-    row.appendChild(span);
+    row.appendChild(document.createTextNode(' '));
 
     const lineCodeDiv = document.createElement('div');
     lineCodeDiv.classList.add('line-code');
@@ -44,20 +42,39 @@ const stripInitialIndent = (node) => {
   initialSpans.forEach((span) => (span.textContent = span.textContent.slice(minIndent)));
 };
 
-const getClipboardHtml = (clip) => {
+export const readClipboardHtml = (clip) => {
   const html = clip.getData('text/html');
-  if (html) return html;
-  const text = clip
-    .getData('text/plain')
+  if (html) {
+    const parsed = new DOMParser().parseFromString(html, 'text/html');
+    // Only code structure and styles are needed, never active pasted content.
+    parsed.body.querySelectorAll('*').forEach((node) => {
+      if (!['DIV', 'SPAN', 'BR'].includes(node.tagName)) {
+        node.remove();
+      } else {
+        Array.from(node.attributes).forEach((attribute) => {
+          if (attribute.name !== 'style') node.removeAttribute(attribute.name);
+        });
+      }
+    });
+    return parsed.body.innerHTML;
+  }
+  const plain = clip.getData('text/plain');
+  if (!plain) return '';
+  const text = plain
     .split('\n')
-    .map((line) => `<div>${line}</div>`)
+    .map((line) => {
+      const node = document.createElement('div');
+      node.textContent = line || '\u00a0';
+      return node.outerHTML;
+    })
     .join('');
   return `<div>${text}</div>`;
 };
 
-export const pasteCode = (config, clipboard) => {
-  snippetNode.innerHTML = getClipboardHtml(clipboard);
+export const renderCode = (config, html) => {
+  snippetNode.innerHTML = html;
   const code = $('div', snippetNode);
+  if (!code) throw new Error('The clipboard does not contain supported code HTML.');
   snippetNode.style.fontSize = code.style.fontSize;
   snippetNode.style.lineHeight = code.style.lineHeight;
   snippetNode.innerHTML = code.innerHTML;
