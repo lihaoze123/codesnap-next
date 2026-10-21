@@ -16,7 +16,7 @@ const writeWindowsImage = async (data, options = {}) => {
   const env = options.env || process.env;
   if (!env.SystemRoot)
     throw new Error(
-      'Windows PowerShell location is unavailable. Use codesnap.clipboardMode: browser.'
+      'Windows PowerShell location is unavailable. Use codesnapNext.clipboardMode: browser.'
     );
   const directory = await fs.mkdtemp(path.join(options.tmpdir || tmpdir(), 'codesnap-clipboard-'));
   const imagePath = path.join(directory, 'capture.png');
@@ -50,7 +50,7 @@ const writeWindowsImage = async (data, options = {}) => {
       throw new Error(
         `Windows clipboard failed: ${String(error.stderr || error.message)
           .trim()
-          .slice(-1000)}. Use codesnap.clipboardMode: browser, or Save image.`
+          .slice(-1000)}. Use codesnapNext.clipboardMode: browser, or Save image.`
       );
     }
     let metrics;

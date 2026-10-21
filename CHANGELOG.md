@@ -1,3 +1,16 @@
+# CodeSnap Next
+
+## 0.1.0
+
+- Independent extension identity, commands and settings.
+- SnapDOM rendering, revisioned PNG cache and immutable click-time snapshots.
+- Acknowledged Windows STA and Wayland clipboard copying.
+- Explicit capture, progress, retries, timing and resolution controls.
+- Full-size long PNG export without extension-imposed dimension or payload caps.
+- See [changes](docs/CHANGES.md) and [benchmarks](docs/BENCHMARK.md).
+
+## Inherited development and upstream history
+
 # Change Log
 
 All notable changes to the "codesnap" extension will be documented in this file.

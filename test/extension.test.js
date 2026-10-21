@@ -89,7 +89,7 @@ test('native host copies only on ready/refresh, reads settings from source, and 
     Module._load = originalLoad;
   }
   extension.activate({ subscriptions: [], extensionPath: path.resolve(__dirname, '..') });
-  await commands['codesnap.start']();
+  await commands['codesnapNext.start']();
   assert.equal(copies, 0, 'waits for webview ready handshake');
   await events.message({ type: 'ready' });
   assert.equal(copies, 1);

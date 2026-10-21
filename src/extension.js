@@ -12,7 +12,7 @@ const getConfig = (editor = vscode.window.activeTextEditor) => {
   if (editor) editorSettings.tabSize = editor.options.tabSize;
 
   const extensionSettings = getSettings(
-    'codesnap',
+    'codesnapNext',
     [
       'backgroundColor',
       'boxShadow',
@@ -51,8 +51,8 @@ const getConfig = (editor = vscode.window.activeTextEditor) => {
 
 const createPanel = (context) => {
   const panel = vscode.window.createWebviewPanel(
-    'codesnap',
-    'CodeSnap 📸',
+    'codesnapNext',
+    'CodeSnap Next 📸',
     { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
     {
       enableScripts: true,
@@ -153,7 +153,7 @@ const runCommand = async (context) => {
         panel.webview.postMessage({ type: 'error', message: error.message });
       }
     } else if (type !== 'capture-complete') {
-      vscode.window.showErrorMessage(`CodeSnap 📸: Unknown shutterAction "${type}"`);
+      vscode.window.showErrorMessage(`CodeSnap Next 📸: Unknown shutterAction "${type}"`);
     }
   });
 
@@ -168,7 +168,7 @@ const runCommand = async (context) => {
     }
   });
   const configHandler = vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration('codesnap') || event.affectsConfiguration('editor')) {
+    if (event.affectsConfiguration('codesnapNext') || event.affectsConfiguration('editor')) {
       panel.webview.postMessage({ type: 'config', config: getConfig(sourceEditor) });
     }
   });
@@ -191,5 +191,5 @@ const runCommand = async (context) => {
 
 module.exports.activate = (context) =>
   context.subscriptions.push(
-    vscode.commands.registerCommand('codesnap.start', () => runCommand(context))
+    vscode.commands.registerCommand('codesnapNext.start', () => runCommand(context))
   );
