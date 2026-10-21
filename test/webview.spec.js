@@ -67,11 +67,11 @@ const open = async (page, lines = 12) => {
   await page.goto('/webview/index.html');
   await page.waitForFunction(() => window.messages.some((message) => message.type === 'ready'));
   await page.evaluate(
-    async ({ cfg, html }) => {
+    async ({ cfg, html, fontFamily }) => {
       // Use a named font stack like VS Code; SVG images and HTML can resolve
       // the bare monospace generic to different system fonts.
       document.documentElement.style.cssText =
-        '--vscode-editor-background:#1e1e1e;--vscode-editor-foreground:#d4d4d4;--vscode-editor-font-family:"Courier New","Liberation Mono",monospace;--vscode-editor-font-size:14;--vscode-editor-font-weight:400;--vscode-editorLineNumber-foreground:#858585';
+        `--vscode-editor-background:#1e1e1e;--vscode-editor-foreground:#d4d4d4;--vscode-editor-font-family:${fontFamily};--vscode-editor-font-size:14;--vscode-editor-font-weight:400;--vscode-editorLineNumber-foreground:#858585`;
       window.renderCount = 0;
       const { renderer } = await import('/webview/src/renderer.js');
       const render = renderer.toBlob;
@@ -82,7 +82,12 @@ const open = async (page, lines = 12) => {
       window.codeHtml = html;
       window.postMessage({ type: 'capture', config: cfg });
     },
-    { cfg: config, html: codeHtml(lines) }
+    {
+      cfg: config,
+      html: codeHtml(lines),
+      fontFamily:
+        process.platform === 'linux' ? '"Liberation Mono",monospace' : '"Courier New",monospace'
+    }
   );
   await expect(page.locator('#status')).toHaveText('Ready to copy.');
 };
