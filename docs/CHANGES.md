@@ -8,7 +8,7 @@ CodeSnap Next 是从 [kufii/CodeSnap](https://github.com/kufii/CodeSnap) 派生�
 
 | 项目         | 原版 1.3.4                                      | CodeSnap Next 0.1.0                                                      |
 | ------------ | ----------------------------------------------- | ------------------------------------------------------------------------ |
-| 扩展标识     | `adpyke.codesnap`                               | `chumeng.codesnap-next`                                                  |
+| 扩展标识     | `adpyke.codesnap`                               | `chumeng.codesnap-next-chumeng`                                          |
 | 命令         | `codesnap.start`                                | `codesnapNext.start`                                                     |
 | 设置         | `codesnap.*`                                    | `codesnapNext.*`，不自动迁移                                             |
 | DOM → 图片   | `dom-to-image-even-more@1.0.4`                  | `@zumer/snapdom@3.3.6`                                                   |
