@@ -4,6 +4,8 @@ GitHub Actions 配置位于 [release.yml](../.github/workflows/release.yml)。
 推送 `main`、提交 PR 或手动运行工作流时，会执行检查、全部测试和 VSIX 打包，安装包保存在该次运行的 Artifacts 中。
 推送与 `package.json` 版本一致的 `v*` 标签时，检查成功后还会自动将同一个 VSIX 发布到 Marketplace。
 例如版本 `0.1.2` 对应标签 `v0.1.2`。普通提交和手动运行不会发布。
+检查和全部 19 项测试在 Windows 上执行，上传任务在 Ubuntu 上发布已经验证的 VSIX。
+浏览器图片对比测试使用明确的系统字体；Linux 图片基线目前仍存在差异，不作为本流程的发布验证环境。
 
 ## 一次性配置
 

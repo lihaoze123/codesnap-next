@@ -17,9 +17,14 @@ concurrency:
 jobs:
   build:
     name: Check, test and package
-    runs-on: ubuntu-24.04
+    runs-on: windows-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
     steps:
+      - name: Preserve LF line endings for formatting checks
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
@@ -39,9 +44,7 @@ jobs:
           NODE
       - run: npm ci
       - run: npm run check
-      - run: npx playwright install --with-deps chromium
-      - name: Install the browser test font
-        run: sudo apt-get install --yes fonts-liberation
+      - run: npx playwright install chromium
       - run: npm test
       - name: Package extension
         run: npx --yes @vscode/vsce@4.0.0 package --out codesnap-next.vsix
