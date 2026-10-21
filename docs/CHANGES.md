@@ -8,7 +8,7 @@ CodeSnap Next 是从 [kufii/CodeSnap](https://github.com/kufii/CodeSnap) 派生�
 
 | 项目         | 原版 1.3.4                                      | CodeSnap Next 0.1.0                                                      |
 | ------------ | ----------------------------------------------- | ------------------------------------------------------------------------ |
-| 扩展标识     | `adpyke.codesnap`                               | `HaozeLi.codesnap-next`                                                  |
+| 扩展标识     | `adpyke.codesnap`                               | `chumeng.codesnap-next`                                                  |
 | 命令         | `codesnap.start`                                | `codesnapNext.start`                                                     |
 | 设置         | `codesnap.*`                                    | `codesnapNext.*`，不自动迁移                                             |
 | DOM → 图片   | `dom-to-image-even-more@1.0.4`                  | `@zumer/snapdom@3.3.6`                                                   |
@@ -56,4 +56,4 @@ Windows 的自动后端选择、进程调用和确认协议有自动化测试，
 尚待实机验证。Windows 专用 `-CheckOnly` 测试在 Linux 上跳过。
 超长图仍受浏览器、内存、操作系统及粘贴目标限制；取消人工上限不等于所有尺寸都能成功。
 
-发布者 ID 为 `HaozeLi`。也可从源码打包 VSIX 安装。
+发布者 ID 为 `chumeng`。也可从源码打包 VSIX 安装。
