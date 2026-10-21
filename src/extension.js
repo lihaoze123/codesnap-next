@@ -16,6 +16,7 @@ const getConfig = (editor = vscode.window.activeTextEditor) => {
       'backgroundColor',
       'boxShadow',
       'containerPadding',
+      'maxWidth',
       'roundedCorners',
       'showWindowControls',
       'showWindowTitle',

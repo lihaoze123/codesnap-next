@@ -6,6 +6,7 @@ html {
   --box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;
   --container-padding: 3em;
   --window-border-radius: 4px;
+  --window-max-width: 960px;
   box-sizing: border-box;
 }
 body {
@@ -40,6 +41,7 @@ body {
   resize: horizontal;
   width: max-content;
   min-width: 100px;
+  max-width: var(--window-max-width);
   padding: 18px;
   background-color: var(--vscode-editor-background);
 }
@@ -82,9 +84,9 @@ body {
   flex: none;
 }
 .line-code {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 #save-container {
   margin-top: 1rem;

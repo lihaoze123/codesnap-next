@@ -41,7 +41,7 @@ For a local VSIX, run `npm ci`, then `npx @vscode/vsce package`, and use **Exten
 
 1. Open the command palette (Ctrl+Shift+P on Windows and Linux, Cmd+Shift+P on OS X) and search for `CodeSnap Next`.
 2. Select code before opening CodeSnap Next, or select code and click **Update selection** in the preview.
-3. Adjust the width of the screenshot if desired. Eligible images are prepared in the background.
+3. Long lines wrap automatically at a default width of 960 CSS pixels. Drag the preview narrower or change `codesnapNext.maxWidth` for a different limit. Eligible images are prepared in the background.
 4. Click **Copy image** or **Save image**. The shutter button follows `codesnapNext.shutterAction`.
 
 Changing the editor selection does not automatically update the preview. Click **Update selection**
@@ -80,6 +80,8 @@ CodeSnap Next is highly configurable. Here's a list of settings you can change t
 **`codesnapNext.boxShadow`:** The CSS box-shadow for the snippet. Can be any valid CSS box shadow.
 
 **`codesnapNext.containerPadding`:** The padding for the snippet's container. Can be any valid CSS padding.
+
+**`codesnapNext.maxWidth`:** Maximum width of the code area including line numbers, in CSS pixels (default: `960`, minimum: `100`). Long lines wrap without changing the source or its line numbers. Window and container padding add to the exported image width; 2× resolution doubles the output dimensions.
 
 **`codesnapNext.roundedCorners`:** Boolean value to use rounded corners or square corners for the window.
 

@@ -217,6 +217,93 @@ test('preserves transparent PNG and escapes plaintext', async ({ page }) => {
   );
 });
 
+test('wraps an 18,296-character plaintext line and exports all text at the default width', async ({
+  page
+}) => {
+  await open(page);
+  const longLine = 'x'.repeat(18296);
+  await page.evaluate((text) => {
+    const data = new DataTransfer();
+    data.setData('text/plain', `first\n${text}\nlast`);
+    document.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data }));
+  }, longLine);
+  await expect(page.locator('#status')).toContainText('Large image:');
+  await expect(page.locator('.line-number')).toHaveText(['10', '11', '12']);
+  const layout = await page.locator('#window').evaluate((node) => {
+    const row = node.querySelectorAll('.line-code')[1];
+    const range = document.createRange();
+    const text = row.querySelector('span').firstChild;
+    range.setStart(text, text.length - 2);
+    range.setEnd(text, text.length - 1);
+    const end = range.getBoundingClientRect();
+    const bounds = row.getBoundingClientRect();
+    return {
+      width: parseFloat(getComputedStyle(node).width),
+      overflowing: row.scrollWidth > row.clientWidth,
+      rowHeight: row.offsetHeight,
+      lastCharacterVisible: end.right <= bounds.right + 1 && end.bottom <= bounds.bottom + 1,
+      text: row.textContent
+    };
+  });
+  expect(layout.width).toBe(960);
+  expect(layout.overflowing).toBe(false);
+  expect(layout.rowHeight).toBeGreaterThan(1000);
+  expect(layout.lastCharacterVisible).toBe(true);
+  expect(layout.text).toBe(longLine + ' ');
+  const dimensions = await page
+    .locator('#snippet-container')
+    .evaluate((node) => ({ width: node.offsetWidth * 2, height: node.offsetHeight * 2 }));
+  await page.locator('#copy-image').click();
+  await expect(page.locator('#status')).toHaveText('Copied image.');
+  const png = await imageInfo(page);
+  expect(png.width).toBe(dimensions.width);
+  expect(png.height).toBe(dimensions.height);
+});
+
+test('wraps highlighted spans at a custom width, follows manual resizing and exports window-only', async ({
+  page
+}) => {
+  await open(page);
+  await page.evaluate((cfg) => {
+    window.codeHtml =
+      '<div style="font-size:14px;line-height:20px"><div><span>first</span></div><div>' +
+      '<span style="color:#c586c0">' +
+      'x'.repeat(500) +
+      '</span><span style="color:#dcdcaa">中文👋 =&gt; end</span></div><div><span>last</span></div></div>';
+    window.postMessage({ type: 'capture', config: { ...cfg, maxWidth: 480, target: 'window' } });
+  }, config);
+  await expect(page.locator('#status')).toHaveText('Ready to copy.');
+  await expect(page.locator('#window')).toHaveCSS('width', '480px');
+  const originalHeight = await page.locator('#window').evaluate((node) => node.offsetHeight);
+  await page.locator('#window').evaluate((node) => {
+    node.style.width = '240px';
+  });
+  await expect(page.locator('#status')).toHaveText('Ready to copy.');
+  expect(await page.locator('#window').evaluate((node) => node.offsetHeight)).toBeGreaterThan(
+    originalHeight
+  );
+  expect(
+    await page
+      .locator('.line-code')
+      .evaluateAll((rows) => rows.every((row) => row.scrollWidth <= row.clientWidth))
+  ).toBe(true);
+  await expect(page.locator('.line-number')).toHaveText(['10', '11', '12']);
+  await expect(page.locator('.line-code span[style]')).toHaveCount(2);
+  const dimensions = await page
+    .locator('#window')
+    .evaluate((node) => ({ width: node.offsetWidth, height: node.offsetHeight }));
+  await page.locator('#image-scale').selectOption('1');
+  await page.locator('#copy-image').click();
+  await expect(page.locator('#status')).toHaveText('Copied image.');
+  const png = await imageInfo(page);
+  expect(png.width).toBe(dimensions.width);
+  expect(png.height).toBe(dimensions.height);
+  await page.evaluate((cfg) => {
+    window.postMessage({ type: 'config', config: { ...cfg, maxWidth: 160 } });
+  }, config);
+  await expect(page.locator('#window')).toHaveCSS('width', '160px');
+});
+
 test('cache coalesces work and never promotes stale results', async ({ page }) => {
   await open(page);
   const result = await page.evaluate(async () => {

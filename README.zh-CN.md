@@ -36,7 +36,7 @@ Linux 无头 Chromium 实测，以下为复制完成总耗时的**中位数**（
 
 1. 打开命令面板：Windows / Linux 使用 Ctrl+Shift+P，macOS 使用 Cmd+Shift+P，搜索 `CodeSnap Next`。
 2. 打开前先选中代码；也可以打开后选择代码，点击预览中的 **Update selection** 获取选区。
-3. 按需调整截图宽度。满足预生成条件时，CodeSnap Next 会在后台准备图片。
+3. 超长行默认在 960 CSS 像素宽度内自动换行，可拖动预览缩窄，或通过 `codesnapNext.maxWidth` 调整上限。满足预生成条件时，CodeSnap Next 会在后台准备图片。
 4. 点击 **Copy image** 复制，或 **Save image** 保存。快门按钮的行为由 `codesnapNext.shutterAction` 决定。
 
 编辑器选区变化不会自动更新预览，需要点击 **Update selection**。
@@ -74,6 +74,8 @@ Monokai + [Fira Code](https://github.com/tonsky/FiraCode)
 **`codesnapNext.boxShadow`：** 窗口阴影，支持有效的 CSS `box-shadow` 值。
 
 **`codesnapNext.containerPadding`：** 容器内边距，支持有效的 CSS `padding` 值。
+
+**`codesnapNext.maxWidth`：** 代码区域（含行号）的最大宽度，单位为 CSS 像素，默认 `960`，最小 `100`。超长行自动换行，不修改源文件和原始行号。窗口和容器内边距会额外增加导出宽度；2× 分辨率会将输出宽高翻倍。
 
 **`codesnapNext.roundedCorners`：** 是否使用圆角窗口。
 

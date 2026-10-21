@@ -2,7 +2,7 @@
   "name": "codesnap-next-chumeng",
   "displayName": "CodeSnap Next (chumeng)",
   "description": "Code screenshots with cached PNG rendering and browser / Wayland clipboard support.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/lihaoze123/codesnap-next"
@@ -74,6 +74,13 @@
           "type": "boolean",
           "default": true,
           "description": "Use rounded corners for the window"
+        },
+        "codesnapNext.maxWidth": {
+          "scope": "resource",
+          "type": "number",
+          "default": 960,
+          "minimum": 100,
+          "description": "Maximum code area width (including line numbers) in CSS pixels. Long lines wrap automatically; drag the preview narrower or increase this value for wider screenshots. Window and container padding use additional space."
         },
         "codesnapNext.showWindowControls": {
           "scope": "resource",

@@ -1,5 +1,9 @@
 # CodeSnap Next
 
+## 0.1.2
+
+- Wrap long lines automatically within a configurable `codesnapNext.maxWidth` (960 CSS pixels by default), preserving source line numbers and complete PNG exports.
+
 ## 0.1.1
 
 - Remove the Windows PowerShell clipboard helper and always use the Webview browser clipboard on Windows.

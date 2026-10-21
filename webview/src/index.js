@@ -68,6 +68,7 @@ const applyConfig = (value) => {
     backgroundColor,
     boxShadow,
     containerPadding,
+    maxWidth = 960,
     roundedCorners,
     showWindowControls,
     showWindowTitle,
@@ -79,6 +80,7 @@ const applyConfig = (value) => {
   setVar('container-background-color', backgroundColor);
   setVar('box-shadow', boxShadow);
   setVar('container-padding', containerPadding);
+  setVar('window-max-width', `${maxWidth}px`);
   setVar('window-border-radius', roundedCorners ? '4px' : 0);
   $('#navbar').hidden = !showWindowControls && !showWindowTitle;
   $('#window-controls').hidden = !showWindowControls;
