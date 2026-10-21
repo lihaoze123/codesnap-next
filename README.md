@@ -150,6 +150,10 @@ other operating systems, fonts and remote-development windows require platform v
 
 ## Development checks
 
+GitHub Actions checks, tests and packages every push to `main` and every pull request.
+Pushing a matching version tag such as `v0.1.2` also publishes the tested VSIX to Marketplace.
+See [automatic publishing setup and release commands (Chinese)](docs/RELEASING.md).
+
 ```sh
 npm ci
 npx playwright install chromium

@@ -136,6 +136,10 @@ Windows 下，`auto` 和 `browser` 都使用 Webview 浏览器剪贴板。扩展
 
 ## 开发检查
 
+GitHub Actions 会在推送 `main` 或提交 PR 时自动检查、测试并打包。
+推送与版本号一致的标签（如 `v0.1.2`）还会自动将通过测试的 VSIX 发布到 Marketplace。
+一次性令牌配置与后续发布命令见[自动发布说明](docs/RELEASING.md)。
+
 ```sh
 npm ci
 npx playwright install chromium
