@@ -1,5 +1,10 @@
 # CodeSnap Next
 
+## 0.1.1
+
+- Remove the Windows PowerShell clipboard helper and always use the Webview browser clipboard on Windows.
+- Keep the optional `wl-copy` fallback for Linux Wayland sessions.
+
 ## 0.1.0
 
 - Independent extension identity, commands and settings.

@@ -17,7 +17,7 @@ CodeSnap Next 是从 [kufii/CodeSnap](https://github.com/kufii/CodeSnap) 派生�
 | 复制时的内容 | 异步操作实时 DOM                                | 点击时冻结 DOM、样式和尺寸，避免中途变化造成错图                         |
 | 浏览器写入   | 调用 `write()` 后不等待完成就闪光               | 等待成功；失败反馈、重试和另存图片                                       |
 | Wayland      | 浏览器剪贴板路径                                | 浏览器拒绝后回退本机 `wl-copy`，成功后复用此路径                         |
-| Windows      | 浏览器剪贴板路径                                | 默认先用本机 PowerShell STA，发布 PNG + Bitmap，等待确认                 |
+| Windows      | 浏览器剪贴板路径                                | 浏览器剪贴板路径；不启动 PowerShell 或专用辅助进程                       |
 | 选区变化     | 每次触发高亮复制，经过系统剪贴板                | 首次打开或显式 Update selection 时获取，其他选区变化只提示               |
 | 分辨率       | 固定 2×                                         | 显式 1× / 2×，显示尺寸和像素数                                           |
 | 长图         | 单画布导出受浏览器能力限制                      | SnapDOM 支持时分窗口导出 PNG，不添加扩展层面的尺寸、像素数或传输大小上限 |
@@ -41,19 +41,14 @@ Next 将渲染与复制分开：图片准备完成后，重复复制直接使用
 - 命令面板搜索 **CodeSnap Next**。旧版可以共存，二者使用不同的设置和命令。
 - 旧的 `codesnap.*` 配置需要手动改为 `codesnapNext.*`。
 - 选区变化后点击 **Update selection**。获取高亮代码依然会覆盖系统剪贴板，普通调整和预生成不会。
-- Windows 默认采用本机后端；设置 `codesnapNext.clipboardMode: "browser"` 可切换为浏览器路径。
+- Windows 始终采用浏览器剪贴板路径，不启动 PowerShell 辅助脚本。
 - Wayland 回退需要本机已有 `wl-copy`；扩展不会自动安装它。macOS 保留浏览器路径。
 - 图片不会被静默缩小或裁剪。选择 1× 会将宽高各减半，像素数变为 2× 时的四分之一。
 
 ## 来源与验证范围
 
-Windows 辅助脚本参考 [SunFlowerBaby32/codesnap-fast](https://github.com/SunFlowerBaby32/codesnap-fast)，
-保留 PNG + Bitmap、STA 和剪贴板争用重试，增加确认协议，并去掉其人工尺寸上限。
-见 [第三方声明](../THIRD_PARTY_NOTICES.md)。
-
 本机已验证 Linux Chromium 浏览器复制与 PNG 读回，以及 Wayland `wl-copy` / `wl-paste` 往返。
-Windows 的自动后端选择、进程调用和确认协议有自动化测试，但 Windows 实际复制速度及接收应用兼容性
-尚待实机验证。Windows 专用 `-CheckOnly` 测试在 Linux 上跳过。
+Windows 使用与 Chromium Webview 相同的浏览器剪贴板路径，不再包含原生辅助进程。
 超长图仍受浏览器、内存、操作系统及粘贴目标限制；取消人工上限不等于所有尺寸都能成功。
 
 发布者 ID 为 `chumeng`。也可从源码打包 VSIX 安装。

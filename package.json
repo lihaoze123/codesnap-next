@@ -1,8 +1,8 @@
 {
   "name": "codesnap-next-chumeng",
   "displayName": "CodeSnap Next (chumeng)",
-  "description": "Code screenshots with cached PNG rendering and native Windows / Wayland clipboard support.",
-  "version": "0.1.0",
+  "description": "Code screenshots with cached PNG rendering and browser / Wayland clipboard support.",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/lihaoze123/codesnap-next"
@@ -133,7 +133,7 @@
             "browser"
           ],
           "default": "auto",
-          "description": "Clipboard backend: auto uses native copying on Windows and falls back to wl-copy on Wayland; browser uses only the Webview clipboard."
+          "description": "Clipboard backend: auto uses the browser on Windows and macOS and may fall back to wl-copy on Wayland; browser always uses only the Webview clipboard."
         },
         "codesnapNext.showTiming": {
           "scope": "resource",

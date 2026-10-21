@@ -93,7 +93,9 @@ test('native host copies only on ready/refresh, reads settings from source, and 
   assert.equal(copies, 0, 'waits for webview ready handshake');
   await events.message({ type: 'ready' });
   assert.equal(copies, 1);
-  assert.equal(messages.find((message) => message.type === 'capture').config.startLine, 8);
+  const captureConfig = messages.find((message) => message.type === 'capture').config;
+  assert.equal(captureConfig.startLine, 8);
+  if (process.platform === 'win32') assert.equal(captureConfig.clipboardMode, 'browser');
   for (let i = 0; i < 100; i++)
     events.selection({ textEditor: editor, selections: editor.selections });
   events.theme();
@@ -108,6 +110,13 @@ test('native host copies only on ready/refresh, reads settings from source, and 
     /run locally/u
   );
   vscode.env.remoteName = undefined;
+  if (process.platform === 'win32') {
+    await events.message({ type: 'copy-native', id: 43, data: '' });
+    assert.match(
+      messages.find((message) => message.type === 'native-copy-result' && message.id === 43).error,
+      /browser clipboard/u
+    );
+  }
   await events.message({ type: 'save', data: 'aGVsbG8=' });
   await events.message({ type: 'save', data: 'aGVsbG8=' });
   assert.equal(saveDefaults.length, 2);

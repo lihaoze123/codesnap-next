@@ -69,8 +69,7 @@ nearest-rank 方法，分别取第 `ceil(n × 0.5)` 和 `ceil(n × 0.95)` 个样
 无头浏览器的剪贴板结果不能当成 Wayland 合成器的端到端耗时。
 
 - Wayland `wl-copy` / `wl-paste` 原生路径做过真实 PNG 往返验证，但本表没有与原版同条件对照的原生基准。
-- Windows 的 PowerShell STA 路径尚无实机速度对照。进程模拟测试、浏览器中的 Windows 模式测试及
-  Windows 专用 `-CheckOnly` 测试不能替代实际复制和粘贴测量。后者在 Linux 上跳过。
+- Windows 使用浏览器剪贴板路径，但本表仍不能替代 VS Code / Electron Webview 中的实际复制和粘贴测量。
 - macOS、VS Code 远程窗口、不同接收应用、首次启动、峰值内存和 900 行极长图的耗时未列入对比。
 
 不会把其他项目所述“200 行生成 2 秒、写入 1 秒”或用户反馈中的“十几秒”作为本项目加速倍数的基线。

@@ -469,45 +469,13 @@ test('browser PNG sanitizer failure can use the native clipboard backend', async
   expect((await imageInfo(page)).bytes).toBeGreaterThan(1000);
 });
 
-test('Windows auto mode chooses native copy before the browser and shows phase/timing feedback', async ({
-  page
-}) => {
-  await open(page);
-  await page.evaluate((cfg) => {
-    window.nativeCopy = true;
-    window.nativePause = true;
-    window.realWrite = navigator.clipboard.write.bind(navigator.clipboard);
-    window.browserAttempts = 0;
-    navigator.clipboard.write = () => {
-      window.browserAttempts++;
-      return new Promise(() => undefined);
-    };
-    window.postMessage({
-      type: 'config',
-      config: { ...cfg, nativeClipboard: true, clipboardMode: 'auto', showTiming: true }
-    });
-  }, config);
-  await expect(page.locator('#status')).toHaveText('Ready to copy.');
-  await page.locator('#copy-image').click();
-  await page.waitForFunction(() => Boolean(window.resumeNative));
-  await expect(page.locator('#status')).toHaveText('Writing to Windows clipboard…');
-  expect(await page.evaluate(() => window.browserAttempts)).toBe(0);
-  expect(await page.locator('#flash-fx').evaluate((node) => node.getAnimations().length)).toBe(0);
-  await page.evaluate(() => window.resumeNative());
-  await expect(page.locator('#status')).toContainText('Copied image. Prepare');
-  await expect(page.locator('#status')).toContainText('clipboard');
-  expect((await imageInfo(page)).bytes).toBeGreaterThan(1000);
-});
-
-test('browser-only mode never invokes native copy even on Windows or after a permission failure', async ({
-  page
-}) => {
+test('browser-only mode never invokes native copy after a permission failure', async ({ page }) => {
   await open(page);
   await page.evaluate(
     (cfg) =>
       window.postMessage({
         type: 'config',
-        config: { ...cfg, nativeClipboard: true, clipboardMode: 'browser' }
+        config: { ...cfg, clipboardMode: 'browser' }
       }),
     config
   );

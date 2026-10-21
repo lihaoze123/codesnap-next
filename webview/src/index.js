@@ -24,13 +24,10 @@ const nativeRequests = new Map();
 const copyNative = (data) =>
   new Promise((resolve, reject) => {
     const id = ++nextRequest;
-    const timer = setTimeout(
-      () => {
-        nativeRequests.delete(id);
-        reject(new Error('Native clipboard request timed out. Retry or use Save image.'));
-      },
-      config.nativeClipboard ? 20000 : 5000
-    );
+    const timer = setTimeout(() => {
+      nativeRequests.delete(id);
+      reject(new Error('Native clipboard request timed out. Retry or use Save image.'));
+    }, 5000);
     nativeRequests.set(id, { resolve, reject, timer });
     vscode.postMessage({ type: 'copy-native', id, data });
   });

@@ -204,11 +204,7 @@ export const takeSnap = async (action, postMessage, onBusy, copyNative) => {
     const blob = cache.get().then((png) => {
       imageReadyAt = performance.now();
       if (!failed && action === 'copy') {
-        notify(
-          config.nativeClipboard && !browserOnly
-            ? 'Writing to Windows clipboard…'
-            : 'Writing image to clipboard…'
-        );
+        notify('Writing image to clipboard…');
       }
       return png;
     });
@@ -218,21 +214,16 @@ export const takeSnap = async (action, postMessage, onBusy, copyNative) => {
     if (action === 'copy') {
       const writeStart = performance.now();
       let backend = 'browser';
-      let nativeMetrics;
       const native = async () => {
         const png = await blob;
         if (!nativeData.has(png)) nativeData.set(png, blobData(png));
         const result = await copyNative(await nativeData.get(png));
         preferNative = true;
-        nativeMetrics = result && result.metrics;
         return typeof result === 'string' ? result : result.backend;
       };
       if (
         !browserOnly &&
-        (config.nativeClipboard ||
-          preferNative ||
-          !navigator.clipboard ||
-          typeof ClipboardItem === 'undefined')
+        (preferNative || !navigator.clipboard || typeof ClipboardItem === 'undefined')
       ) {
         backend = await native();
       } else {
@@ -265,9 +256,7 @@ export const takeSnap = async (action, postMessage, onBusy, copyNative) => {
         hit,
         backend,
         prepareMs,
-        clipboardMs,
-        nativeHelperMs: nativeMetrics && nativeMetrics.HelperMilliseconds,
-        nativeClipboardMs: nativeMetrics && nativeMetrics.ClipboardMilliseconds
+        clipboardMs
       });
       cameraFlashAnimation();
       notify(

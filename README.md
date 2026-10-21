@@ -113,14 +113,10 @@ subsequent copies. CodeSnap Next runs in the local UI extension host, including 
 it refuses to run the native fallback on a remote host. If `wl-copy` is unavailable, the failure is
 reported explicitly; nothing is installed automatically. macOS retains the browser path.
 
-On Windows, `codesnapNext.clipboardMode: "auto"` selects a local Windows PowerShell STA helper
-**before** calling the browser clipboard. The helper publishes the original PNG plus a compatible
-Bitmap format, keeps the data available after the helper exits, retries brief clipboard contention, and
-acknowledges success before the flash. This path is adapted from
-[CodeSnap Fast](https://github.com/SunFlowerBaby32/codesnap-fast); its image-size caps are not adopted.
-The original PNG is placed in a per-request temporary directory and removed when the request ends.
-PowerShell runs hidden with the current execution policy; no administrator privileges or execution
-policy changes are requested. If it is unavailable or blocked, use the explicit browser mode:
+On Windows, both `auto` and `browser` use the Webview browser clipboard. The extension does not
+start PowerShell or use a Windows-specific clipboard helper. If browser clipboard permission is
+denied, focus the preview and retry, or use **Save image**. You can explicitly lock the setting to
+the browser path with:
 
 ```json
 {
@@ -130,8 +126,7 @@ policy changes are requested. If it is unavailable or blocked, use the explicit 
 ```
 
 Preparing and clipboard-writing stages are always visible. `showTiming` additionally shows the
-preparation and clipboard durations after success. The Windows helper has a 15-second process
-timeout and the Webview waits up to 20 seconds for its reply; failures do not report success.
+preparation and clipboard durations after success; failures do not report success.
 
 Background preparation covers up to 200 lines and 4 million output pixels. Larger images are
 generated on demand. There are no extension-imposed pixel-count, side-length, or PNG payload-size

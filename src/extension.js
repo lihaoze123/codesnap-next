@@ -5,7 +5,6 @@ const path = require('path');
 const { homedir } = require('os');
 const { readHtml, writeFile, getSettings } = require('./util');
 const { writeWaylandImage } = require('./clipboard');
-const { writeWindowsImage } = require('./clipboard-windows');
 
 const getConfig = (editor = vscode.window.activeTextEditor) => {
   const editorSettings = getSettings('editor', ['fontLigatures', 'tabSize'], editor);
@@ -43,7 +42,9 @@ const getConfig = (editor = vscode.window.activeTextEditor) => {
   return {
     ...editorSettings,
     ...extensionSettings,
-    nativeClipboard: process.platform === 'win32',
+    // Windows intentionally uses only the Webview clipboard. This avoids
+    // depending on PowerShell script execution policy in the extension host.
+    clipboardMode: process.platform === 'win32' ? 'browser' : extensionSettings.clipboardMode,
     startLine,
     windowTitle
   };
@@ -136,10 +137,10 @@ const runCommand = async (context) => {
             'Native clipboard copy requires CodeSnap to run locally. Use Save image.'
           );
         }
-        const result =
-          process.platform === 'win32'
-            ? await writeWindowsImage(data)
-            : { backend: await writeWaylandImage(data) };
+        if (process.platform === 'win32') {
+          throw new Error('Windows uses the browser clipboard. Focus the preview and retry.');
+        }
+        const result = { backend: await writeWaylandImage(data) };
         if (!disposed) panel.webview.postMessage({ type: 'native-copy-result', id, ...result });
       } catch (error) {
         if (!disposed)
