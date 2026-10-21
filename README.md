@@ -23,6 +23,7 @@ which does not yet meet the 200ms optimization target. These are not end-to-end 
 of Windows / Wayland native backends or the VS Code Webview. See the benchmark report for
 the environment, P95, and raw samples.
 
+Marketplace display name: **CodeSnap Next (chumeng)**.
 Extension ID: `chumeng.codesnap-next-chumeng`. Command: **CodeSnap Next 📸** (`codesnapNext.start`).
 Settings use `codesnapNext.*`; existing `codesnap.*` settings are not imported. Both extensions can
 be installed together.

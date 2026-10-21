@@ -1,6 +1,6 @@
 {
   "name": "codesnap-next-chumeng",
-  "displayName": "CodeSnap Next",
+  "displayName": "CodeSnap Next (chumeng)",
   "description": "Code screenshots with cached PNG rendering and native Windows / Wayland clipboard support.",
   "version": "0.1.0",
   "repository": {

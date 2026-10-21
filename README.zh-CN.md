@@ -19,6 +19,7 @@ Linux 无头 Chromium 实测，以下为复制完成总耗时的**中位数**（
 缓存数据不含此前生成 PNG 的时间。200 行未缓存 P95 为 224.1ms，尚未达到 200ms 的优化目标。
 这些不是 Windows / Wayland 原生后端或 VS Code Webview 的端到端数据；环境、P95 和原始样本见 benchmark 报告。
 
+商店显示名称：**CodeSnap Next (chumeng)**。
 扩展 ID：`chumeng.codesnap-next-chumeng`。命令：**CodeSnap Next 📸**（`codesnapNext.start`）。
 配置使用 `codesnapNext.*`，不会自动导入原版的 `codesnap.*` 设置，两款扩展可以共存。
 可先运行 `npm ci`，再运行 `npx @vscode/vsce package` 打包，并通过 **Extensions: Install from VSIX** 安装。
