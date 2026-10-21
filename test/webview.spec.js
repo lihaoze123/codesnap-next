@@ -70,8 +70,7 @@ const open = async (page, lines = 12) => {
     async ({ cfg, html, fontFamily }) => {
       // Use a named font stack like VS Code; SVG images and HTML can resolve
       // the bare monospace generic to different system fonts.
-      document.documentElement.style.cssText =
-        `--vscode-editor-background:#1e1e1e;--vscode-editor-foreground:#d4d4d4;--vscode-editor-font-family:${fontFamily};--vscode-editor-font-size:14;--vscode-editor-font-weight:400;--vscode-editorLineNumber-foreground:#858585`;
+      document.documentElement.style.cssText = `--vscode-editor-background:#1e1e1e;--vscode-editor-foreground:#d4d4d4;--vscode-editor-font-family:${fontFamily};--vscode-editor-font-size:14;--vscode-editor-font-weight:400;--vscode-editorLineNumber-foreground:#858585`;
       window.renderCount = 0;
       const { renderer } = await import('/webview/src/renderer.js');
       const render = renderer.toBlob;
