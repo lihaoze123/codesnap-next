@@ -44,14 +44,14 @@ jobs:
       - name: Package extension
         run: npx --yes @vscode/vsce@4.0.0 package --out codesnap-next.vsix
       - name: Upload VSIX
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: vsix-${{ github.sha }}
           path: codesnap-next.vsix
           if-no-files-found: error
       - name: Upload test diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results-${{ github.sha }}
           path: test-results/
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v6
         with:
           name: vsix-${{ github.sha }}
       - name: Publish tested VSIX
